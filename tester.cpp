@@ -14,11 +14,34 @@ string rtrim(string s)
     return "";
 }
 
+string read_file(string path)
+{
+  fstream file;
+  string line;
+  string content="";
+
+  file.open(path, ios::in);
+  if(!file.good())
+  { 
+    cout<<"Something went wrong! Canot acces work file."<<endl;
+    exit(EXIT_FAILURE);
+  }
+
+  while (getline(file, line))
+  {
+    line = rtrim(line);
+    content += line+"\n";
+  }
+  content = rtrim(content);
+  file.close();
+
+  return content;
+}
 
 int main (int argc, char *argv[]) {
   if(argc < 3)
   {
-    cout << "Usage: ..."; // program test path
+    cout << "Usage: tester (program to be tested) (tests directory)";
   }
   else
   {   
@@ -48,52 +71,14 @@ int main (int argc, char *argv[]) {
         {
 
           string cmd(argv[1]);
-          cmd = cmd + " < " + path + "/" + fileName + " > test.out";
+          cmd = cmd + " < " + path + "/" + fileName + " > " + path + "/" + "alghorithm_tester.out";
 
           system(&cmd[0]);
 
           //compare test.out with proper .out file
-          fstream tested;
-          string testedStr = "";
+          string testedStr = read_file(path + "/" + "alghorithm_tester.out");
 
-          fstream solution;
-          string solutionStr = "";
-
-          string line;
-
-          tested.open("test.out", ios::in);
-          if(!tested.good())
-          { 
-            cout<<"Something went wrong! Canot acces work file."<<endl;
-            return EXIT_FAILURE;
-          }
-
-          while (getline(tested, line))
-          {
-            line = rtrim(line);
-            testedStr += line+"\n";
-          }
-          testedStr = rtrim(testedStr);
-
-          tested.close();
-
-          string path2 = path + "/" + fileNameNoExtension+".out";
-
-          solution.open(path2, ios::in);
-          if(!solution.good())
-          { 
-            cout<<"No .out file for test "<<fileNameNoExtension<<endl;
-            return EXIT_FAILURE;
-          }
-
-          while (getline(solution, line))
-          {
-            line = rtrim(line);
-            solutionStr += line+"\n";
-          }
-          solutionStr = rtrim(solutionStr);
-
-          solution.close();
+          string solutionStr = read_file(path + "/" + fileNameNoExtension+".out");
 
           if(solutionStr == testedStr)
             cout<<fileNameNoExtension<<": OK"<<endl;
