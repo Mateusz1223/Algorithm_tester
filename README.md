@@ -10,6 +10,7 @@ Linux:
 `./tester (program to be tested) (tests directory)`
 
 Example:
+
 Windows:
 `tester example\add.exe example\tests`
 
