@@ -3,11 +3,16 @@
 Program which tests alghorithms
 
 ## Usage
+Windows:
 `tester (program to be tested) (tests directory)`
 
+Linux:
+`./tester (program to be tested) (tests directory)`
+
 Example:
+Windows:
 `tester example\add.exe example\tests`
 
-## Comments
-Tester may not work proper on linux!
+Linux:
+`./tester example/add example/tests`
 
