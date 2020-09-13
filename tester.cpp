@@ -4,6 +4,8 @@
 
 using namespace std;
 
+bool hide = false;
+
 string rtrim(string s)
 {
   string WHITESPACE = " \n\t";
@@ -40,11 +42,18 @@ string read_file(string path)
 
 int main (int argc, char *argv[]) {
   if(argc < 3)
-  {
-    cout << "Usage: tester (program to be tested) (tests directory)";
-  }
+    cout << "Usage: tester (program to be tested) (tests directory) -h to hide fault message (optional)";
   else
-  {   
+  {
+    if(argc >= 4)
+    {
+      string arg4(argv[3]);
+      if(arg4 == "-h")
+        hide = true;
+      else
+        cout<<"Unknown command: '"<<arg4<<"'"<<endl<<endl;
+    }
+
     DIR *dir;
     dirent *ent;
 
@@ -83,7 +92,12 @@ int main (int argc, char *argv[]) {
           if(solutionStr == testedStr)
             cout<<fileNameNoExtension<<": OK"<<endl;
           else
-            cout<<fileNameNoExtension<<": FAULT. Expected: '"<<solutionStr<<"' but given: '"<<testedStr<<"'";
+          {
+            if(hide == false)
+              cout<<fileNameNoExtension<<": FAULT. Expected: '"<<solutionStr<<"' but given: '"<<testedStr<<"'"<<endl;
+            else
+              cout<<fileNameNoExtension<<": FAULT"<<endl;
+          }
         }
       }
       closedir (dir);

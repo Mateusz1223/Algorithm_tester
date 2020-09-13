@@ -4,10 +4,10 @@ Program which tests alghorithms
 
 ## Usage
 Windows:
-`tester (program to be tested) (tests directory)`
+`tester (program to be tested) (tests directory) -h to hide fault message (optional)`
 
 Linux:
-`./tester (program to be tested) (tests directory)`
+`./tester (program to be tested) (tests directory) -h to hide fault message (optional)`
 
 Example:
 
