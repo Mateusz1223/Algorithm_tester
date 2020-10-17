@@ -4,7 +4,10 @@
 
 using namespace std;
 
-bool hide = false;
+bool hideMode = false;
+bool analyzingmode = false;
+
+string path;
 
 string rtrim(string s)
 {
@@ -16,13 +19,13 @@ string rtrim(string s)
     return "";
 }
 
-string read_file(string path)
+string read_file(string p)
 {
   fstream file;
   string line;
   string content="";
 
-  file.open(path, ios::in);
+  file.open(p, ios::in);
   if(!file.good())
   { 
     cout<<"Something went wrong! Canot acces work file."<<endl;
@@ -40,6 +43,81 @@ string read_file(string path)
   return content;
 }
 
+void classic_compare(string testName)
+{
+  //compare test.out with proper .out file
+  string outputStr = read_file(path + "/" + "alghorithm_tester.out");
+
+  string solutionStr = read_file(path + "/" + testName+".out");
+
+  if(solutionStr == outputStr)
+    cout<<"OK"<<endl;
+  else
+  {
+    if(hideMode == false)
+      cout<<"FAULT. Expected: '"<<solutionStr<<"' but given: '"<<outputStr<<"'"<<endl;
+    else
+      cout<<"FAULT"<<endl;
+  }
+}
+
+void analisys_compare(string testName)
+{
+  cout<<"\n";
+
+  int line = 0;
+  int correctLines = 0;
+
+  fstream solutionFile;
+  string solutionLine;
+
+  fstream outputFile;
+  string outputLine;
+
+  // open file with solution
+  solutionFile.open(path + "/" + testName+".out");
+  if(!solutionFile.good())
+  { 
+    cout<<"Something went wrong! There is no "<<testName<<".out file."<<endl;
+    exit(EXIT_FAILURE);
+  }
+
+  // open file with program output
+  outputFile.open(path + "/" + "alghorithm_tester.out", ios::in);
+  if(!outputFile.good())
+  { 
+    cout<<"Something went wrong! Canot acces work file."<<endl;
+    exit(EXIT_FAILURE);
+  }
+
+  //files compare
+  while(getline(solutionFile, solutionLine))
+  {
+    line++;
+
+    solutionLine = rtrim(solutionLine);
+    
+    if(!getline(outputFile, outputLine))
+      cout<<"Line "<<line<<": No output";
+    else
+    {
+      solutionLine = rtrim(solutionLine);
+
+      if(solutionLine == outputLine)
+        correctLines++;
+      else if(hideMode == false)
+        cout<<"Line "<<line<<": FAULT. Expected: '"<<solutionLine<<"' but given: '"<<outputLine<<"'"<<endl;
+    }
+  }
+  
+  solutionFile.close();
+  outputFile.close();
+
+  cout<<"------------------------------------\n";
+  cout<<"Result: "<<correctLines<<"/"<<line<<"  Percent: "<<(correctLines*100)/line<<"%\n";
+  cout<<"------------------------------------\n\n";
+}
+
 int main (int argc, char *argv[]) {
   if(argc < 3)
     cout << "Usage: tester (program to be tested) (tests directory) -h to hide fault message (optional)";
@@ -47,17 +125,22 @@ int main (int argc, char *argv[]) {
   {
     if(argc >= 4)
     {
-      string arg4(argv[3]);
-      if(arg4 == "-h")
-        hide = true;
-      else
-        cout<<"Unknown command: '"<<arg4<<"'"<<endl<<endl;
+      for(int i=3; i < argc; i++)
+      {
+        string arg(argv[i]);
+        if(arg == "-h")
+          hideMode = true;
+        else if(arg == "-a")
+            analyzingmode = true;
+        else
+          cout<<"Unknown command: '"<<arg<<"'"<<endl<<endl;
+      }
     }
 
     DIR *dir;
     dirent *ent;
 
-    string path(argv[2]);
+    path = string(argv[2]);
     path = "./"+path;
 
     if (dir = opendir(&path[0])) 
@@ -67,7 +150,7 @@ int main (int argc, char *argv[]) {
         string fileName(ent->d_name);
         int length = fileName.length();
  
-        string fileNameNoExtension = fileName.substr(0, length-3);
+        string testName = fileName.substr(0, length-3);
 
         string extension = "";
         if(length>=3)
@@ -84,20 +167,11 @@ int main (int argc, char *argv[]) {
 
           system(&cmd[0]);
 
-          //compare test.out with proper .out file
-          string testedStr = read_file(path + "/" + "alghorithm_tester.out");
-
-          string solutionStr = read_file(path + "/" + fileNameNoExtension+".out");
-
-          if(solutionStr == testedStr)
-            cout<<fileNameNoExtension<<": OK"<<endl;
+          cout<<testName<<": ";
+          if(analyzingmode == false)
+            classic_compare(testName);
           else
-          {
-            if(hide == false)
-              cout<<fileNameNoExtension<<": FAULT. Expected: '"<<solutionStr<<"' but given: '"<<testedStr<<"'"<<endl;
-            else
-              cout<<fileNameNoExtension<<": FAULT"<<endl;
-          }
+            analisys_compare(testName);
         }
       }
       closedir (dir);
