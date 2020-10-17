@@ -109,13 +109,17 @@ void analisys_compare(string testName)
         cout<<"Line "<<line<<": FAULT. Expected: '"<<solutionLine<<"' but given: '"<<outputLine<<"'"<<endl;
     }
   }
-  
+
+  if(getline(outputFile, outputLine)) cout<<"FAULT. Output to long!!!\n";
+  else
+  {
+    cout<<"------------------------------------\n";
+    cout<<"Result: "<<correctLines<<"/"<<line<<"  Percent: "<<(correctLines*100)/line<<"%\n";
+    cout<<"------------------------------------\n\n";
+  }
+
   solutionFile.close();
   outputFile.close();
-
-  cout<<"------------------------------------\n";
-  cout<<"Result: "<<correctLines<<"/"<<line<<"  Percent: "<<(correctLines*100)/line<<"%\n";
-  cout<<"------------------------------------\n\n";
 }
 
 int main (int argc, char *argv[]) {
