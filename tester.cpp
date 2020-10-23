@@ -1,11 +1,13 @@
 #include <iostream>
 #include <dirent.h>
 #include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
 bool hideMode = false;
 bool analyzingmode = false;
+bool faultReturnMode = false;
 
 string path;
 
@@ -58,6 +60,12 @@ void classic_compare(string testName)
       cout<<"FAULT. Expected: '"<<solutionStr<<"' but given: '"<<outputStr<<"'"<<endl;
     else
       cout<<"FAULT"<<endl;
+
+    if(faultReturnMode)
+    {
+      cout<<"\nFault return mode. Exiting...\n";
+      exit(0);
+    }
   }
 }
 
@@ -136,6 +144,8 @@ int main (int argc, char *argv[]) {
           hideMode = true;
         else if(arg == "-a")
             analyzingmode = true;
+          else if(arg == "-f")
+            faultReturnMode = true;
         else
           cout<<"Unknown command: '"<<arg<<"'"<<endl<<endl;
       }
