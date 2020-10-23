@@ -2,12 +2,13 @@
 #include <dirent.h>
 #include <fstream>
 #include <cstdlib>
+#include <string.h>
 
 using namespace std;
 
 bool hideMode = false;
 bool analyzingmode = false;
-bool faultReturnMode = false;
+bool faultStopMode = false;
 
 string path;
 
@@ -61,10 +62,17 @@ void classic_compare(string testName)
     else
       cout<<"FAULT"<<endl;
 
-    if(faultReturnMode)
+    if(faultStopMode)
     {
-      cout<<"\nFault return mode. Exiting...\n";
-      exit(0);
+      cout<<"\nFault stop mode. Type \"Y\" to continue...\n";
+      while(1)
+      {
+        string answer;
+        cin>>answer;
+        if(answer == "Y" || answer == "y");
+          break;
+      }
+      cout<<"\n";
     }
   }
 }
@@ -132,7 +140,7 @@ void analisys_compare(string testName)
 
 int main (int argc, char *argv[]) {
   if(argc < 3)
-    cout << "Usage: tester (program to be tested) (tests directory) -h to hide fault message (optional)";
+    cout << "Usage: tester (program to be tested) (tests directory) -h to hide fault message (optional) -a for analyzing mode (optional) -s to stop program after fault (optional)";
   else
   {
     if(argc >= 4)
@@ -144,8 +152,8 @@ int main (int argc, char *argv[]) {
           hideMode = true;
         else if(arg == "-a")
             analyzingmode = true;
-          else if(arg == "-f")
-            faultReturnMode = true;
+          else if(arg == "-s")
+            faultStopMode = true;
         else
           cout<<"Unknown command: '"<<arg<<"'"<<endl<<endl;
       }

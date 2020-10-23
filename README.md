@@ -4,10 +4,10 @@ Program which tests alghorithms
 
 ## Usage
 Windows:
-`tester (program to be tested) (tests directory) -h to hide fault message (optional) -a for analyzing mode (optional) -f to exit after fault (optional)`
+`tester (program to be tested) (tests directory) -h to hide fault message (optional) -a for analyzing mode (optional) -s to stop program after fault (optional)`
 
 Linux:
-`./tester (program to be tested) (tests directory) -h to hide fault message (optional) -a for analyzing mode (optional) -f to exit after fault (optional)`
+`./tester (program to be tested) (tests directory) -h to hide fault message (optional) -a for analyzing mode (optional) -s to stop program after fault (optional)`
 
 ###### Example:
 
