@@ -1,6 +1,6 @@
 # Algorithm_tester
 
-Program which tests alghorithms
+Program which tests output and measures executing time.
 
 ## Usage
 Windows:

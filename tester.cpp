@@ -1,8 +1,8 @@
 #include <iostream>
 #include <dirent.h>
 #include <fstream>
-#include <cstdlib>
 #include <string.h>
+#include <chrono> // for time measurement
 
 using namespace std;
 
@@ -159,6 +159,9 @@ int main (int argc, char *argv[]) {
       }
     }
 
+    cout.setf(ios::fixed,ios::floatfield); // set double print precision to two for printing TIME
+    cout.precision(2);
+
     DIR *dir;
     dirent *ent;
 
@@ -187,9 +190,12 @@ int main (int argc, char *argv[]) {
           string cmd(argv[1]);
           cmd = cmd + " < " + path + "/" + fileName + " > " + path + "/" + "alghorithm_tester.out";
 
+          auto start = chrono::high_resolution_clock::now();
           system(&cmd[0]);
+          auto finish = chrono::high_resolution_clock::now();
+          chrono::duration<double> elapsed = finish - start; 
 
-          cout<<testName<<": ";
+          cout<<"TEST "<<testName<<": TIME: "<<elapsed.count()<<"s, ";
           if(analyzingmode == false)
             classic_compare(testName);
           else
