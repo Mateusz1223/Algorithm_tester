@@ -12,135 +12,14 @@ bool faultStopMode = false;
 
 string path;
 
-string rtrim(string s)
-{
-  string WHITESPACE = " \n\t";
-  int end = s.find_last_not_of(WHITESPACE);
-  if(end >= 0)
-    return s.substr(0, end+1);
-  else
-    return "";
-}
+string rtrim(string s);
+void classic_compare(string testName);
+void analisys_compare(string testName);
 
-string read_file(string p)
-{
-  fstream file;
-  string line;
-  string content="";
-
-  file.open(p, ios::in);
-  if(!file.good())
-  { 
-    cout<<"Something went wrong! Canot acces work file."<<endl;
-    exit(EXIT_FAILURE);
-  }
-
-  while (getline(file, line))
-  {
-    line = rtrim(line);
-    content += line+"\n";
-  }
-  content = rtrim(content);
-  file.close();
-
-  return content;
-}
-
-void classic_compare(string testName)
-{
-  //compare test.out with proper .out file
-  string outputStr = read_file(path + "/" + "alghorithm_tester.out");
-
-  string solutionStr = read_file(path + "/" + testName+".out");
-
-  if(solutionStr == outputStr)
-    cout<<"OK"<<endl;
-  else
-  {
-    if(hideMode == false)
-      cout<<"FAULT. Expected: '"<<solutionStr<<"' but given: '"<<outputStr<<"'"<<endl;
-    else
-      cout<<"FAULT"<<endl;
-
-    if(faultStopMode)
-    {
-      cout<<"\nFault stop mode. Type \"Y\" to continue...\n";
-      while(1)
-      {
-        string answer;
-        cin>>answer;
-        if(answer == "Y" || answer == "y");
-          break;
-      }
-      cout<<"\n";
-    }
-  }
-}
-
-void analisys_compare(string testName)
-{
-  cout<<"\n";
-
-  int line = 0;
-  int correctLines = 0;
-
-  fstream solutionFile;
-  string solutionLine;
-
-  fstream outputFile;
-  string outputLine;
-
-  // open file with solution
-  solutionFile.open(path + "/" + testName+".out");
-  if(!solutionFile.good())
-  { 
-    cout<<"Something went wrong! There is no "<<testName<<".out file."<<endl;
-    exit(EXIT_FAILURE);
-  }
-
-  // open file with program output
-  outputFile.open(path + "/" + "alghorithm_tester.out", ios::in);
-  if(!outputFile.good())
-  { 
-    cout<<"Something went wrong! Canot acces work file."<<endl;
-    exit(EXIT_FAILURE);
-  }
-
-  //files compare
-  while(getline(solutionFile, solutionLine))
-  {
-    line++;
-
-    solutionLine = rtrim(solutionLine);
-    
-    if(!getline(outputFile, outputLine))
-      cout<<"Line "<<line<<": No output";
-    else
-    {
-      solutionLine = rtrim(solutionLine);
-
-      if(solutionLine == outputLine)
-        correctLines++;
-      else if(hideMode == false)
-        cout<<"Line "<<line<<": FAULT. Expected: '"<<solutionLine<<"' but given: '"<<outputLine<<"'"<<endl;
-    }
-  }
-
-  if(getline(outputFile, outputLine)) cout<<"FAULT. Output to long!!!\n";
-  else
-  {
-    cout<<"------------------------------------\n";
-    cout<<"Result: "<<correctLines<<"/"<<line<<"  Percent: "<<(correctLines*100)/line<<"%\n";
-    cout<<"------------------------------------\n\n";
-  }
-
-  solutionFile.close();
-  outputFile.close();
-}
 
 int main (int argc, char *argv[]) {
   if(argc < 3)
-    cout << "Usage: tester (program to be tested) (tests directory) -h to hide fault message (optional) -a for analyzing mode (optional) -s to stop program after fault (optional)";
+    cout << "tester (program to be tested) (tests directory) -a for analyzing mode (optional) -h to hide fault informations in analyzing mode (optional) -s to stop program after fault in classic mode (optional)";
   else
   {
     if(argc >= 4)
@@ -155,7 +34,7 @@ int main (int argc, char *argv[]) {
           else if(arg == "-s")
             faultStopMode = true;
         else
-          cout<<"Unknown command: '"<<arg<<"'"<<endl<<endl;
+          cout<<"Unknown command: '"<<arg<<"'\n\n";
       }
     }
 
@@ -195,7 +74,7 @@ int main (int argc, char *argv[]) {
           auto finish = chrono::high_resolution_clock::now();
           chrono::duration<double> elapsed = finish - start; 
 
-          cout<<"TEST "<<testName<<": TIME: "<<elapsed.count()<<"s, ";
+          cout<<"TEST "<<testName<<": time: "<<elapsed.count()<<"s, ";
           if(analyzingmode == false)
             classic_compare(testName);
           else
@@ -206,11 +85,171 @@ int main (int argc, char *argv[]) {
     }
     else
     {
-      cout<<"Directory canot be accesed!"<<endl;
+      cout<<"Directory canot be accesed!\n";
       return EXIT_FAILURE;
     }
 
   }
-  cout<<endl;
+  cout<<'\n';
   return 0;
+}
+
+
+// funkcje
+
+string rtrim(string s)
+{
+  string WHITESPACE = " \n\t";
+  int end = s.find_last_not_of(WHITESPACE);
+  if(end >= 0)
+    return s.substr(0, end+1);
+  else
+    return "";
+}
+
+void stop()
+{
+  cout<<"\nFault stop mode. Type \"Y\" to continue...\n";
+  while(1)
+  {
+    string answer;
+    cin>>answer;
+    if(answer == "Y" || answer == "y");
+      break;
+  }
+  cout<<"\n";
+}
+
+void classic_compare(string testName)
+{
+  int line = 0;
+
+  fstream solutionFile;
+  string solutionLine;
+
+  fstream outputFile;
+  string outputLine;
+
+  // open file with solution
+  solutionFile.open(path + "/" + testName+".out");
+  if(!solutionFile.good())
+  { 
+    cout<<"Something went wrong! There is no "<<testName<<".out file.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  // open file with program output
+  outputFile.open(path + "/" + "alghorithm_tester.out", ios::in);
+  if(!outputFile.good())
+  { 
+    cout<<"Something went wrong! Canot acces work file.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  //files compare
+  while(getline(solutionFile, solutionLine))
+  {
+    line++;
+
+    solutionLine = rtrim(solutionLine);
+    
+    if(!getline(outputFile, outputLine))
+    {
+      cout<<"line "<<line<<": No output";
+
+      if(faultStopMode)
+	    stop();
+    }
+    else
+    {
+      solutionLine = rtrim(solutionLine);
+
+      if(solutionLine != outputLine)
+      {
+        cout<<"line "<<line<<": FAULT. Expected: '"<<solutionLine<<"' but given: '"<<outputLine<<"'\n";
+
+        solutionFile.close();
+        outputFile.close();
+
+        if(faultStopMode)
+	   	  stop();
+
+        return;
+      }
+    }
+  }
+
+  if(getline(outputFile, outputLine))
+  {
+    cout<<"FAULT. Output to long!!!\n";
+
+    if(faultStopMode)
+	  stop();
+  }
+  else
+    cout<<"OK\n";
+
+  solutionFile.close();
+  outputFile.close();
+}
+
+void analisys_compare(string testName)
+{
+  cout<<"\n";
+
+  int line = 0;
+  int correctLines = 0;
+
+  fstream solutionFile;
+  string solutionLine;
+
+  fstream outputFile;
+  string outputLine;
+
+  // open file with solution
+  solutionFile.open(path + "/" + testName+".out");
+  if(!solutionFile.good())
+  { 
+    cout<<"Something went wrong! There is no "<<testName<<".out file.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  // open file with program output
+  outputFile.open(path + "/" + "alghorithm_tester.out", ios::in);
+  if(!outputFile.good())
+  { 
+    cout<<"Something went wrong! Canot acces work file.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  //files compare
+  while(getline(solutionFile, solutionLine))
+  {
+    line++;
+
+    solutionLine = rtrim(solutionLine);
+    
+    if(!getline(outputFile, outputLine))
+      cout<<"Line "<<line<<": No output";
+    else
+    {
+      solutionLine = rtrim(solutionLine);
+
+      if(solutionLine == outputLine)
+        correctLines++;
+      else if(hideMode == false)
+        cout<<"Line "<<line<<": FAULT. Expected: '"<<solutionLine<<"' but given: '"<<outputLine<<"\n";
+    }
+  }
+
+  if(getline(outputFile, outputLine)) cout<<"FAULT. Output to long!!!\n";
+  else
+  {
+    cout<<"------------------------------------\n";
+    cout<<"Result: "<<correctLines<<"/"<<line<<"  Percent: "<<(correctLines*100)/line<<"%\n";
+    cout<<"------------------------------------\n\n";
+  }
+
+  solutionFile.close();
+  outputFile.close();
 }
