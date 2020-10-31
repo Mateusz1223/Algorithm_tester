@@ -159,6 +159,7 @@ void classic_compare(string testName)
 
       if(faultStopMode)
 	    stop();
+      return;
     }
     else
     {
