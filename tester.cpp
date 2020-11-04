@@ -119,7 +119,7 @@ void stop()
   {
     string answer;
     cin>>answer;
-    if(answer == "Y" || answer == "y");
+    if(answer == "y" || answer == "Y")
       break;
   }
   cout<<"\n";
