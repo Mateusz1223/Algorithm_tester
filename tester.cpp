@@ -19,7 +19,12 @@ void analisys_compare(string testName);
 
 int main (int argc, char *argv[]) {
   if(argc < 3)
-    cout << "tester (program to be tested) (tests directory) -a for analyzing mode (optional) -h to hide fault informations in analyzing mode (optional) -s to stop program after fault in classic mode (optional)";
+  {
+    cout << "tester (program to be tested) (tests directory)\n";
+    cout << "  -a for analyzing mode (optional)\n";
+    cout << "  -h to hide fault informations in analyzing mode (optional)\n";
+    cout << "  -s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)\n";
+  }
   else
   {
     if(argc >= 4)
@@ -74,7 +79,7 @@ int main (int argc, char *argv[]) {
           auto finish = chrono::high_resolution_clock::now();
           chrono::duration<double> elapsed = finish - start; 
 
-          cout<<"TEST "<<testName<<": time: "<<elapsed.count()<<"s, ";
+          cout<<"TEST "<<testName<<": time: "<<elapsed.count()<<"s";
           if(analyzingmode == false)
             classic_compare(testName);
           else
@@ -109,7 +114,7 @@ string rtrim(string s)
 
 void stop()
 {
-  cout<<"\nFault stop mode. Type \"Y\" to continue...\n";
+  cout<<"\nStop mode. Type \"Y\" to continue...\n";
   while(1)
   {
     string answer;
@@ -122,6 +127,7 @@ void stop()
 
 void classic_compare(string testName)
 {
+  cout<<", ";
   int line = 0;
 
   fstream solutionFile;
@@ -158,7 +164,7 @@ void classic_compare(string testName)
       cout<<"line "<<line<<": No output";
 
       if(faultStopMode)
-	    stop();
+	     stop();
       return;
     }
     else
@@ -231,7 +237,12 @@ void analisys_compare(string testName)
     solutionLine = rtrim(solutionLine);
     
     if(!getline(outputFile, outputLine))
+    {
       cout<<"Line "<<line<<": No output";
+      if(faultStopMode)
+        stop();
+      return;
+    }
     else
     {
       solutionLine = rtrim(solutionLine);
@@ -243,12 +254,21 @@ void analisys_compare(string testName)
     }
   }
 
-  if(getline(outputFile, outputLine)) cout<<"FAULT. Output to long!!!\n";
+  if(getline(outputFile, outputLine))
+    {
+      cout<<"FAULT. Output to long!!!\n";
+
+      if(faultStopMode)
+        stop();
+    }
   else
   {
     cout<<"------------------------------------\n";
     cout<<"Result: "<<correctLines<<"/"<<line<<"  Percent: "<<(correctLines*100)/line<<"%\n";
     cout<<"------------------------------------\n\n";
+
+    if(faultStopMode)
+        stop();
   }
 
   solutionFile.close();

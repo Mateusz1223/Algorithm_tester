@@ -4,10 +4,16 @@ Program which tests output and measures executing time.
 
 ## Usage
 Windows:
-`tester (program to be tested) (tests directory) -a for analyzing mode (optional) -h to hide fault informations in analyzing mode (optional) -s to stop program after fault in classic mode (optional)`
+`tester (program to be tested) (tests directory) 
+	-a for analyzing mode (optional)
+	-h to hide fault informations in analyzing mode (optional)
+	-s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)`
 
 Linux:
-`./tester (program to be tested) (tests directory) -a for analyzing mode (optional) -h to hide fault informations in analyzing mode (optional) -s to stop program after fault in classic mode(optional)`
+`./tester (program to be tested) (tests directory)
+	-a for analyzing mode (optional)
+	-h to hide fault informations in analyzing mode (optional)
+	-s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)`
 
 ###### Example:
 
