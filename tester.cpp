@@ -161,7 +161,7 @@ void classic_compare(string testName)
     
     if(!getline(outputFile, outputLine))
     {
-      cout<<"line "<<line<<": No output";
+      cout<<"line "<<line<<": No output\n";
 
       if(faultStopMode)
 	     stop();
@@ -170,6 +170,7 @@ void classic_compare(string testName)
     else
     {
       solutionLine = rtrim(solutionLine);
+      outputLine = rtrim(outputLine);
 
       if(solutionLine != outputLine)
       {
@@ -179,7 +180,7 @@ void classic_compare(string testName)
         outputFile.close();
 
         if(faultStopMode)
-	   	  stop();
+	   	   stop();
 
         return;
       }
@@ -191,7 +192,7 @@ void classic_compare(string testName)
     cout<<"FAULT. Output to long!!!\n";
 
     if(faultStopMode)
-	  stop();
+	   stop();
   }
   else
     cout<<"OK\n";
@@ -238,7 +239,7 @@ void analisys_compare(string testName)
     
     if(!getline(outputFile, outputLine))
     {
-      cout<<"Line "<<line<<": No output";
+      cout<<"Line "<<line<<": No output\n";
       if(faultStopMode)
         stop();
       return;
