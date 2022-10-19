@@ -247,6 +247,7 @@ void analisys_compare(string testName)
     else
     {
       solutionLine = rtrim(solutionLine);
+      outputLine = rtrim(outputLine);
 
       if(solutionLine == outputLine)
         correctLines++;
