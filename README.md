@@ -7,13 +7,15 @@ Windows:
 `tester (program to be tested) (tests directory)`<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;`-a for analyzing mode (optional)`<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;`-h to hide fault informations in analyzing mode (optional)`<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;`-s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)`
+&nbsp;&nbsp;&nbsp;&nbsp;`-s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)`<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`-i for tests folders that are split into in and out folders`
 
 Linux:
 `./tester (program to be tested) (tests directory)`<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;`-a for analyzing mode (optional)`<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;`-h to hide fault informations in analyzing mode (optional)`<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;`-s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)`
+&nbsp;&nbsp;&nbsp;&nbsp;`-s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)`<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`-i for tests folders that are split into in and out folders`
 
 ###### Example:
 

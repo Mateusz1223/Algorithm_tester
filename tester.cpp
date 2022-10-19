@@ -9,8 +9,11 @@ using namespace std;
 bool hideMode = false;
 bool analyzingmode = false;
 bool faultStopMode = false;
+bool testFolderSplit = false;
 
 string path;
+string in_path;
+string out_path;
 
 string rtrim(string s);
 void classic_compare(string testName);
@@ -24,6 +27,7 @@ int main (int argc, char *argv[]) {
     cout << "  -a for analyzing mode (optional)\n";
     cout << "  -h to hide fault informations in analyzing mode (optional)\n";
     cout << "  -s to stop program after fault in classic mode or after analizing one test in analyzing mode (optional)\n";
+    cout << "  -i for tests folders that are split into in and out folders\n";
   }
   else
   {
@@ -36,8 +40,10 @@ int main (int argc, char *argv[]) {
           hideMode = true;
         else if(arg == "-a")
             analyzingmode = true;
-          else if(arg == "-s")
+        else if(arg == "-s")
             faultStopMode = true;
+        else if(arg == "-i")
+            testFolderSplit = true;
         else
           cout<<"Unknown command: '"<<arg<<"'\n\n";
       }
@@ -51,8 +57,13 @@ int main (int argc, char *argv[]) {
 
     path = string(argv[2]);
     path = "./"+path;
-
-    if (dir = opendir(&path[0])) 
+    in_path = path;
+    out_path = path;
+    if(testFolderSplit){
+      in_path += "/in";
+      out_path += "/out";
+    }
+    if (dir = opendir(&in_path[0])) 
     {
       while (ent = readdir (dir))
       {
@@ -72,7 +83,7 @@ int main (int argc, char *argv[]) {
         {
 
           string cmd(argv[1]);
-          cmd = cmd + " < " + path + "/" + fileName + " > " + path + "/" + "alghorithm_tester.out";
+          cmd = cmd + " < " + in_path + "/" + fileName + " > " + path + "/" + "alghorithm_tester.out";
 
           auto start = chrono::high_resolution_clock::now();
           system(&cmd[0]);
@@ -137,10 +148,12 @@ void classic_compare(string testName)
   string outputLine;
 
   // open file with solution
-  solutionFile.open(path + "/" + testName+".out");
+  string solutionFilePath;
+  solutionFilePath = out_path + "/" + testName+".out";
+  solutionFile.open(solutionFilePath);
   if(!solutionFile.good())
   { 
-    cout<<"Something went wrong! There is no "<<testName<<".out file.\n";
+    cout<<"Something went wrong! There is no "<<solutionFilePath<<" file.\n";
     exit(EXIT_FAILURE);
   }
 
@@ -215,10 +228,12 @@ void analisys_compare(string testName)
   string outputLine;
 
   // open file with solution
-  solutionFile.open(path + "/" + testName+".out");
+  string solutionFilePath;
+  solutionFilePath = out_path + "/" + testName+".out";
+  solutionFile.open(solutionFilePath);
   if(!solutionFile.good())
   { 
-    cout<<"Something went wrong! There is no "<<testName<<".out file.\n";
+    cout<<"Something went wrong! There is no "<<solutionFilePath<<" file.\n";
     exit(EXIT_FAILURE);
   }
 
